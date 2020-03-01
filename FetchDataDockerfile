@@ -1,0 +1,9 @@
+FROM node
+ 
+WORKDIR /usr/src/fetchdata
+ 
+COPY ./node /usr/src/fetchdata
+ 
+RUN cd /usr/src/fetchdata
+RUN npm install
+ENTRYPOINT ["npm","start"]

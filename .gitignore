@@ -1,3 +1,7 @@
+# Mongodb volume
+mongo-volume/
+
+# Mac file
 .DS_STORE
 
 # Logs

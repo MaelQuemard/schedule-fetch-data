@@ -1,0 +1,82 @@
+version: '3'
+services: 
+  mongodb:
+    image: 'mongo'
+    environment: 
+      - MONGO_INITDB_DATABASE=minerstat
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=pwd
+    volumes: 
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./mongo-volume:/data/db
+    ports: 
+      - '27017-27019:27017-27019'
+    networks: 
+      - backend
+
+  mongo-express:
+    image: mongo-express
+    environment:
+        - ME_CONFIG_MONGODB_SERVER=mongodb
+        - ME_CONFIG_MONGODB_PORT=27017
+        - ME_CONFIG_MONGODB_ENABLE_ADMIN=false
+        - ME_CONFIG_MONGODB_AUTH_DATABASE=minerstat
+        - ME_CONFIG_MONGODB_AUTH_USERNAME=mongoUser
+        - ME_CONFIG_MONGODB_AUTH_PASSWORD=mongoPwd
+        - ME_CONFIG_BASICAUTH_USERNAME=root
+        - ME_CONFIG_BASICAUTH_PASSWORD=pwd
+    depends_on:
+        - mongodb
+    ports:
+      - "8888:8081"
+    networks: 
+      - backend
+
+  mongo-proxy:
+    build:
+      context: .
+      dockerfile: ProxyDockerfile
+    restart: always
+    networks:
+      - backend
+
+  grafana:
+    build:
+      context: .
+      dockerfile: GrafanaDockerfile
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - backend
+      - frontend
+
+  fetchdata:
+    build: 
+      context: .
+      dockerfile: FetchDataDockerfile
+    restart: always
+    networks: 
+      - backend
+
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: postgresUser
+      POSTGRES_PASSWORD: postgresPwd
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    restart: unless-stopped
+
+networks:
+  frontend:
+  backend:
+
+volumes:
+    postgres:

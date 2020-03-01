@@ -1,0 +1,19 @@
+{
+  "name": "fetch-data-minerstat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "fetchData.js",
+  "scripts": {
+    "start": "node fetchDataToMongo.js | node fetchDataToPostgres.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "mongodb": "^3.5.4",
+    "node-fetch": "^2.6.0",
+    "node-schedule": "^1.3.2",
+    "pg": "^7.18.2"
+  }
+}

@@ -1,0 +1,5 @@
+FROM grafana/grafana
+
+COPY ./mongodb-grafana-master /var/lib/grafana/plugins/mongodb-grafana
+
+EXPOSE 3000
